@@ -6,32 +6,32 @@ import (
 )
 
 type numberString struct {
-	name string
-	rubl string
-	kop  string
+	name     string
+	integer  string
+	fraction string
 }
 
 var number = map[int64]numberString{
-	1:  {name: "один", rubl: "рубль", kop: "копейка"},
-	2:  {name: "два", rubl: "рубля", kop: "копейки"},
-	3:  {name: "три", rubl: "рубля", kop: "копейки"},
-	4:  {name: "четыре", rubl: "рубля", kop: "копейки"},
-	5:  {name: "пять", rubl: "рублей", kop: "копеек"},
-	6:  {name: "шесть", rubl: "рублей", kop: "копеек"},
-	7:  {name: "семь", rubl: "рублей", kop: "копеек"},
-	8:  {name: "восемь", rubl: "рублей", kop: "копеек"},
-	9:  {name: "девять", rubl: "рублей", kop: "копеек"},
-	0:  {name: "", rubl: "рублей", kop: "копеек"},
-	10: {name: "десять", rubl: "рублей", kop: "копеек"},
-	11: {name: "одиндцать", rubl: "рублей", kop: "копеек"},
-	12: {name: "двенадцать", rubl: "рублей", kop: "копеек"},
-	13: {name: "тринадцать", rubl: "рублей", kop: "копеек"},
-	14: {name: "четырнадцать", rubl: "рублей", kop: "копеек"},
-	15: {name: "пятнадцать", rubl: "рублей", kop: "копеек"},
-	16: {name: "шестнадцать", rubl: "рублей", kop: "копеек"},
-	17: {name: "семнадцать", rubl: "рублей", kop: "копеек"},
-	18: {name: "восемнадцать", rubl: "рублей", kop: "копеек"},
-	19: {name: "девятнадцать", rubl: "рублей", kop: "копеек"},
+	1:  {name: "один", integer: "рубль", fraction: "копейка"},
+	2:  {name: "два", integer: "рубля", fraction: "копейки"},
+	3:  {name: "три", integer: "рубля", fraction: "копейки"},
+	4:  {name: "четыре", integer: "рубля", fraction: "копейки"},
+	5:  {name: "пять", integer: "рублей", fraction: "копеек"},
+	6:  {name: "шесть", integer: "рублей", fraction: "копеек"},
+	7:  {name: "семь", integer: "рублей", fraction: "копеек"},
+	8:  {name: "восемь", integer: "рублей", fraction: "копеек"},
+	9:  {name: "девять", integer: "рублей", fraction: "копеек"},
+	0:  {name: "", integer: "рублей", fraction: "копеек"},
+	10: {name: "десять", integer: "рублей", fraction: "копеек"},
+	11: {name: "одиндцать", integer: "рублей", fraction: "копеек"},
+	12: {name: "двенадцать", integer: "рублей", fraction: "копеек"},
+	13: {name: "тринадцать", integer: "рублей", fraction: "копеек"},
+	14: {name: "четырнадцать", integer: "рублей", fraction: "копеек"},
+	15: {name: "пятнадцать", integer: "рублей", fraction: "копеек"},
+	16: {name: "шестнадцать", integer: "рублей", fraction: "копеек"},
+	17: {name: "семнадцать", integer: "рублей", fraction: "копеек"},
+	18: {name: "восемнадцать", integer: "рублей", fraction: "копеек"},
+	19: {name: "девятнадцать", integer: "рублей", fraction: "копеек"},
 }
 var ten = map[int64]string{
 	1: "десять",
@@ -94,7 +94,7 @@ func formatInteger(v int64) string {
 
 			// добавляем "рублей" в требуемой форме
 			if sum == "" {
-				sum = " " + number[digit].rubl
+				sum = " " + number[digit].integer
 			}
 
 			//корректировка для тысяч
@@ -137,15 +137,15 @@ func formatFraction(v int64) string {
 	var sum string
 	switch {
 	case v >= 3 && v <= 19:
-		sum = sum + " " + number[v].name + " " + number[v].kop
+		sum = sum + " " + number[v].name + " " + number[v].fraction
 	case v%10 == 0:
-		sum = sum + " " + ten[v/10] + " " + number[0].kop
+		sum = sum + " " + ten[v/10] + " " + number[0].fraction
 	case v%10 == 1:
-		sum = sum + ten[v/10] + " одна " + number[1].kop
+		sum = sum + ten[v/10] + " одна " + number[1].fraction
 	case v%10 == 2:
-		sum = sum + ten[v/10] + " две " + number[2].kop
+		sum = sum + ten[v/10] + " две " + number[2].fraction
 	default:
-		sum = sum + " " + ten[v/10] + " " + number[v%10].name + " " + number[v%10].kop
+		sum = sum + " " + ten[v/10] + " " + number[v%10].name + " " + number[v%10].fraction
 	}
 
 	return capFirst(strings.TrimSpace(sum))
