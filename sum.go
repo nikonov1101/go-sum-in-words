@@ -12,6 +12,7 @@ type numberString struct {
 }
 
 var number = map[int64]numberString{
+	0:  {name: "", integer: "рублей", fraction: "копеек"},
 	1:  {name: "один", integer: "рубль", fraction: "копейка"},
 	2:  {name: "два", integer: "рубля", fraction: "копейки"},
 	3:  {name: "три", integer: "рубля", fraction: "копейки"},
@@ -21,7 +22,6 @@ var number = map[int64]numberString{
 	7:  {name: "семь", integer: "рублей", fraction: "копеек"},
 	8:  {name: "восемь", integer: "рублей", fraction: "копеек"},
 	9:  {name: "девять", integer: "рублей", fraction: "копеек"},
-	0:  {name: "", integer: "рублей", fraction: "копеек"},
 	10: {name: "десять", integer: "рублей", fraction: "копеек"},
 	11: {name: "одиндцать", integer: "рублей", fraction: "копеек"},
 	12: {name: "двенадцать", integer: "рублей", fraction: "копеек"},
@@ -60,74 +60,77 @@ func formatInteger(v int64) string {
 	sum := ""
 	pos := 1
 
-	for v > 0 {
-		digit := v % 10
-		switch pos {
-		//обрабатываем каждый первый разряд в тройке
-		case 1, 4, 7:
-			if v%100/10 == 1 {
-				digit = v % 100
-			}
-
-			//добавляем "тысячи", если необходимо
-			if pos == 4 && v%1000 > 0 {
-				switch digit {
-				case 1:
-					sum = " тысяча" + sum
-				case 2, 3, 4:
-					sum = " тысячи" + sum
-				default:
-					sum = " тысяч" + sum
+	if v == 0 {
+		sum = "ноль рублей"
+	} else {
+		for v > 0 {
+			digit := v % 10
+			switch pos {
+			//обрабатываем каждый первый разряд в тройке
+			case 1, 4, 7:
+				if v%100/10 == 1 {
+					digit = v % 100
 				}
-			}
-			//добавляем "миллионы", если необходимо
-			if pos == 7 {
-				switch digit {
-				case 1:
-					sum = " миллион" + sum
-				case 2, 3, 4:
-					sum = " миллиона" + sum
-				default:
-					sum = " миллионов" + sum
-				}
-			}
 
-			// добавляем "рублей" в требуемой форме
-			if sum == "" {
-				sum = " " + number[digit].integer
-			}
-
-			//корректировка для тысяч
-			if pos == 4 && digit == 1 {
-				sum = "одна" + sum
-			} else {
-				if pos == 4 && digit == 2 {
-					sum = "две" + sum
-				} else {
-					if digit != 0 {
-						sum = " " + number[digit].name + sum
+				//добавляем "тысячи", если необходимо
+				if pos == 4 && v%1000 > 0 {
+					switch digit {
+					case 1:
+						sum = " тысяча" + sum
+					case 2, 3, 4:
+						sum = " тысячи" + sum
+					default:
+						sum = " тысяч" + sum
 					}
 				}
-			}
+				//добавляем "миллионы", если необходимо
+				if pos == 7 {
+					switch digit {
+					case 1:
+						sum = " миллион" + sum
+					case 2, 3, 4:
+						sum = " миллиона" + sum
+					default:
+						sum = " миллионов" + sum
+					}
+				}
 
-			pos++
-			if v%100/10 == 1 {
+				// добавляем "рублей" в требуемой форме
+				if sum == "" {
+					sum = " " + number[digit].integer
+				}
+
+				//корректировка для тысяч
+				if pos == 4 && digit == 1 {
+					sum = "одна" + sum
+				} else {
+					if pos == 4 && digit == 2 {
+						sum = "две" + sum
+					} else {
+						if digit != 0 {
+							sum = " " + number[digit].name + sum
+						}
+					}
+				}
+
 				pos++
-				v = v / 10
+				if v%100/10 == 1 {
+					pos++
+					v = v / 10
+				}
+			case 2, 5, 8:
+				if digit != 0 {
+					sum = " " + ten[digit] + sum
+				}
+				pos++
+			case 3, 6, 9:
+				if digit != 0 {
+					sum = " " + hundred[digit] + sum
+				}
+				pos++
 			}
-		case 2, 5, 8:
-			if digit != 0 {
-				sum = " " + ten[digit] + sum
-			}
-			pos++
-		case 3, 6, 9:
-			if digit != 0 {
-				sum = " " + hundred[digit] + sum
-			}
-			pos++
+			v = v / 10
 		}
-		v = v / 10
-
 	}
 
 	return capFirst(strings.TrimSpace(sum))
