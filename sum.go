@@ -179,7 +179,7 @@ func FormatSum(v float64, withFraction bool) (string, string) {
 
 // capitalize First letter for unicode string
 func capFirst(s string) string {
-	if len(s) == 1 {
+	if len(s) < 2 {
 		return strings.ToUpper(s)
 	}
 
